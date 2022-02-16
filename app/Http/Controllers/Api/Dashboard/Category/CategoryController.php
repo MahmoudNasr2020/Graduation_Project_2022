@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Api\Dashboard\Category;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Category\AddCategoryRequest;
+use App\Http\Traits\ApiResponse;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
+    use ApiResponse;
 
     /** @noinspection PhpUndefinedMethodInspection */
     public function index()
@@ -15,17 +19,9 @@ class CategoryController extends Controller
         $categories = Category::paginate(50);
         if(!$categories)
         {
-            return response()->json([
-                'data'      =>  'Not Found Data',
-                'message'   =>  'success',
-                'status'    =>   204
-            ]);
+            return $this->response('Not Found Data','success',204);
         }
-        return response()->json([
-            'data'      =>  $categories,
-            'message'   =>  'success',
-            'status'    =>   200
-        ]);
+        return $this->response($categories,'success',200);
     }
 
     public function create()
@@ -35,7 +31,23 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),
+        [
+            'name' => ['required','unique:categories,name','string'],
+            'description'=> ['nullable']
+        ]);
+
+        if($validator->fails())
+        {
+            return $this->response($validator->errors(),'success',422);
+        }
+
+        $category = Category::create([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
+        return $this->response($category,'success',201);
+
     }
 
     public function show($id)
