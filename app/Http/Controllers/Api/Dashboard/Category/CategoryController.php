@@ -62,7 +62,12 @@ class CategoryController extends Controller
 
     public function edit($id)
     {
-        //
+        $category = Category::find($id);
+        if(!$category)
+        {
+            return $this->response('Not Found This Item','success',204);
+        }
+        return $this->response($category,'success',200);
     }
 
     public function update(Request $request, $id)
