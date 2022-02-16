@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Dashboard\Category;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Category\AddCategoryRequest;
 use App\Http\Traits\ApiResponse;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -52,7 +51,13 @@ class CategoryController extends Controller
 
     public function show($id)
     {
-        //
+        $category = Category::find($id);
+        if(!$category)
+        {
+            return $this->response('Not Found This Item','success',204);
+        }
+        return $this->response($category,'success',200);
+
     }
 
     public function edit($id)
