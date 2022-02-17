@@ -4,7 +4,7 @@
 namespace App\Http\Traits;
 
 
-trait ApiResponse
+trait ApiTrait
 {
     public function response($data,$msg,$status)
     {
@@ -13,5 +13,13 @@ trait ApiResponse
             'message'   =>  $msg,
             'status'    =>   $status
         ]);
+    }
+
+    public function image($folder,$image)
+    {
+        $image_name = time().$image->hashName();
+        $image->storeAs($folder,$image_name);
+        return$image_name;
+
     }
 }

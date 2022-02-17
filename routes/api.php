@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Dashboard\Category\CategoryController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Dashboard\Product\ProductController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -11,4 +11,8 @@ use Illuminate\Support\Facades\Route;
     Route::resource('categories',CategoryController::class);
     ////////End Category/////////////
 
+    ////////StartCategory/////////////
+    Route::resource('products', ProductController::class);
+    ////////End Category/////////////
+    ///
 //////////////////////////////////////////////End Route Dashboard ////////////////////////////////////////////////////////////////

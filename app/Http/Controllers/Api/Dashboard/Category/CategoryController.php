@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Api\Dashboard\Category;
 
 use App\Http\Controllers\Controller;
-use App\Http\Traits\ApiResponse;
+use App\Http\Traits\ApiTrait;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
-    use ApiResponse;
+    use ApiTrait;
 
     /** @noinspection PhpUndefinedMethodInspection */
     public function index()
