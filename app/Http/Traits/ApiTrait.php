@@ -4,6 +4,8 @@
 namespace App\Http\Traits;
 
 
+use Illuminate\Support\Facades\File;
+
 trait ApiTrait
 {
     public function response($data,$msg,$status)
@@ -19,7 +21,17 @@ trait ApiTrait
     {
         $image_name = time().$image->hashName();
         $image->storeAs($folder,$image_name);
-        return$image_name;
+        return $folder.'/'.$image_name;
+    }
+
+    /** @noinspection PhpUnused */
+    public function delete_image($path)
+    {
+        $image = public_path().'/'.$path;
+       if (File::exists($image))
+       {
+           File::delete($image);
+       }
 
     }
 }

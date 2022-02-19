@@ -32,7 +32,7 @@ class ProductController extends Controller
     {
         $validator = Validator::make($request->all(),
             [
-                'name' => ['required','unique:products,name','string'],
+                'name' => ['required','string'],
                 'price' => ['required','numeric'],
                 'country' => ['required','string'],
                 'image' => ['required','image','max:2048'],
@@ -61,23 +61,68 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        //
+        $product = Product::find($id);
+        if(!$product)
+        {
+            return $this->response('Not Found This Item','success',204);
+        }
+        return $this->response($product,'success',200);
     }
 
     public function edit($id)
     {
-        //
+        $product = Product::find($id);
+        if(!$product)
+        {
+            return $this->response('Not Found This Item','success',204);
+        }
+        return $this->response($product,'success',200);
     }
 
 
     public function update(Request $request, $id)
     {
-        //
+        $product = Product::find($id);
+        if(!$product)
+        {
+            return $this->response('Not Found This Item','success',204);
+        }
+        $validator = Validator::make($request->all(),
+            [
+                'name' => ['required','string'],
+                'price' => ['required','numeric'],
+                'country' => ['required','string'],
+                'image' => ['nullable','image','max:2048'],
+                'category_id' =>['required','not_in:0'],
+                'description'=> ['nullable']
+            ]);
+
+        if($validator->fails())
+        {
+            return $this->response($validator->errors(),'success',422);
+        }
+        $data = $request->all();
+
+        if($request->hasFile('image')){
+            $this->delete_image('images/'.$product->image);
+            $data['image'] = $this->image('products',$request->file('image'));
+        }
+
+        $product->update($data);
+        return $this->response($product,'success',201);
+
     }
 
 
     public function destroy($id)
     {
-        //
+        $product = Product::find($id);
+        if(!$product)
+        {
+            return $this->response('Not Found This Item','success',204);
+        }
+        $this->delete_image('images/'.$product->image);
+        $product->delete();
+        return $this->response('Deleted Successfully','success',200);
     }
 }

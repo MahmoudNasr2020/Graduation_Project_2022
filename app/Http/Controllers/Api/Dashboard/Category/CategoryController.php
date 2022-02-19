@@ -106,6 +106,6 @@ class CategoryController extends Controller
             return $this->response('Not Found This Item','success',204);
         }
         $category->delete();
-        return $this->response('Deleted Successfully','success',201);
+        return $this->response('Deleted Successfully','success',200);
     }
 }
