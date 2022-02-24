@@ -36,4 +36,8 @@ class LoginController extends Controller
         return $this->response($data,'success',200);
 
     }
+
+    public function unauthenticated(){
+        return $this->response('Unauthenticated','Unauthorized',401);
+    }
 }

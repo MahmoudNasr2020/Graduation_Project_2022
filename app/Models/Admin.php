@@ -14,8 +14,15 @@ class Admin extends Authenticatable
         'name',
         'email',
         'password',
+        'image',
+        'rule_id'
     ];
     protected $hidden = [
         'password',
     ];
+
+    public function rule()
+    {
+        return $this->belongsTo(Rule::class,'rule_id');
+    }
 }

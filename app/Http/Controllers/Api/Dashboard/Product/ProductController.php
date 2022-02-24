@@ -12,6 +12,14 @@ class ProductController extends Controller
 {
     use ApiTrait;
 
+    public function __construct()
+    {
+        $this->middleware('rule:product_show',['only'=>['index','show']]);
+        $this->middleware('rule:product_add',['only'=>['store']]);
+        $this->middleware('rule:product_edit',['only'=>['edit','update']]);
+        $this->middleware('rule:product_delete',['only'=>['delete']]);
+    }
+
     public function index()
     {
         $products = Product::paginate(50);
@@ -61,31 +69,30 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::find($id);
+        $product = Product::with('category')->find($id);
         if(!$product)
         {
-            return $this->response('Not Found This Item','success',204);
+            return $this->response('Not Found This Item','success',404);
         }
         return $this->response($product,'success',200);
     }
 
     public function edit($id)
     {
-        $product = Product::find($id);
+        $product = Product::with('category')->find($id);
         if(!$product)
         {
-            return $this->response('Not Found This Item','success',204);
+            return $this->response('Not Found This Item','success',404);
         }
         return $this->response($product,'success',200);
     }
-
 
     public function update(Request $request, $id)
     {
         $product = Product::find($id);
         if(!$product)
         {
-            return $this->response('Not Found This Item','success',204);
+            return $this->response('Not Found This Item','success',404);
         }
         $validator = Validator::make($request->all(),
             [
@@ -94,7 +101,7 @@ class ProductController extends Controller
                 'country' => ['required','string'],
                 'image' => ['nullable','image','max:2048'],
                 'category_id' =>['required','not_in:0'],
-                'description'=> ['nullable']
+                'description'=> ['required']
             ]);
 
         if($validator->fails())

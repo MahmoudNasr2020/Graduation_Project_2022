@@ -12,6 +12,14 @@ class CategoryController extends Controller
 {
     use ApiTrait;
 
+    public function __construct()
+    {
+         $this->middleware('rule:category_show',['only'=>['index','show']]);
+         $this->middleware('rule:category_add',['only'=>['store']]);
+         $this->middleware('rule:category_edit',['only'=>['edit','update']]);
+         $this->middleware('rule:category_delete',['only'=>['delete']]);
+    }
+
     /** @noinspection PhpUndefinedMethodInspection */
     public function index()
     {
@@ -55,7 +63,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if(!$category)
         {
-            return $this->response('Not Found This Item','success',204);
+            return $this->response('Not Found This Item','success',404);
         }
         return $this->response($category,'success',200);
 
@@ -66,7 +74,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if(!$category)
         {
-            return $this->response('Not Found This Item','success',204);
+            return $this->response('Not Found This Item','success',404);
         }
         return $this->response($category,'success',200);
     }
@@ -77,7 +85,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if(!$category)
         {
-            return $this->response('Not Found This Item','success',204);
+            return $this->response('Not Found This Item','success',404);
         }
 
         $validator = Validator::make($request->all(),
@@ -105,6 +113,7 @@ class CategoryController extends Controller
         {
             return $this->response('Not Found This Item','success',204);
         }
+        $category->products()->delete();
         $category->delete();
         return $this->response('Deleted Successfully','success',200);
     }
