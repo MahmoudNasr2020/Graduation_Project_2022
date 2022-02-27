@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 class LoginController extends Controller
 {
     use ApiTrait;
+
     public function login(Request $request)
     {
 
@@ -37,7 +38,15 @@ class LoginController extends Controller
 
     }
 
-    public function unauthenticated(){
+    public function logout()
+    {
+        $tokens =  Auth::guard('api-admin')->user()->token();
+        $tokens->revoke();
+        return $this->response('logout successfully','success',200);
+    }
+
+    public function unauthenticated()
+    {
         return $this->response('Unauthenticated','Unauthorized',401);
     }
 }

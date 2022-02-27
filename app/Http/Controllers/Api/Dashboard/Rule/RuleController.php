@@ -38,6 +38,10 @@ class RuleController extends Controller
             'product_add'=>['sometimes','nullable','in:enable,disable'],
             'product_edit'=>['sometimes','nullable','in:enable,disable'],
             'product_delete'=>['sometimes','nullable','in:enable,disable'],
+            'admin_show'=>['sometimes','nullable','in:enable,disable'],
+            'admin_add'=>['sometimes','nullable','in:enable,disable'],
+            'admin_edit'=>['sometimes','nullable','in:enable,disable'],
+            'admin_delete'=>['sometimes','nullable','in:enable,disable'],
         ]);
       return $data;
     }

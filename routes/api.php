@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\Api\Dashboard\Admin\AdminController;
 use App\Http\Controllers\Api\Dashboard\Category\CategoryController;
+use App\Http\Controllers\Api\Dashboard\Company\CompanyController;
 use App\Http\Controllers\Api\Dashboard\Login\LoginController;
 use App\Http\Controllers\Api\Dashboard\Product\ProductController;
 use App\Http\Controllers\Api\Dashboard\Rule\RuleController;
+use App\Http\Controllers\Api\Dashboard\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -23,6 +25,17 @@ Route::group(['prefix'=>'dashboard','as'=>'dashboard.'],function (){
         Route::resource('admins',AdminController::class);
         ////////End Admin/////////////
 
+
+        ////////Start Users/////////////
+        Route::resource('users', UserController::class);
+        ////////End Users/////////////
+
+
+        ////////Start Users/////////////
+        Route::resource('companies', CompanyController::class);
+        ////////End Users/////////////
+
+
         ////////Start Category/////////////
         Route::resource('categories',CategoryController::class);
         ////////End Category/////////////
@@ -30,7 +43,8 @@ Route::group(['prefix'=>'dashboard','as'=>'dashboard.'],function (){
 
         ////////Start Product/////////////
         Route::resource('products', ProductController::class);
-        ////////End Product/////////////
+        ////////End Product//////////////
+
 
         //////// Start Rule /////////////
         Route::get('rule/show/{id}', [RuleController::class,'show']);
@@ -39,6 +53,12 @@ Route::group(['prefix'=>'dashboard','as'=>'dashboard.'],function (){
         Route::put('rule/update/{id}', [RuleController::class,'update']);
         Route::delete('rule/destroy/{id}', [RuleController::class,'destroy']);
         //////// End Rule /////////////
+
+
+        ///////Start Logout/////////////
+        Route::post('logout', [LoginController::class,'logout']);
+        ////////End Logout/////////////
+
     });
 
 });

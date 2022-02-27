@@ -1,46 +1,53 @@
 <?php
 
-namespace App\Http\Controllers\Api\Dashboard\Admin;
+namespace App\Http\Controllers\Api\Dashboard\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiTrait;
-use App\Models\Admin;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class AdminController extends Controller
+class UserController extends Controller
 {
     use ApiTrait;
 
-    public function __construct()
+    /*
+      public function __construct()
     {
-        $this->middleware('rule:admin_show',['only'=>['index','show']]);
-        $this->middleware('rule:admin_add',['only'=>['store']]);
-        $this->middleware('rule:admin_edit',['only'=>['edit','update']]);
-        $this->middleware('rule:admin_delete',['only'=>['delete']]);
+        $this->middleware('rule:product_show',['only'=>['index','show']]);
+        $this->middleware('rule:product_add',['only'=>['store']]);
+        $this->middleware('rule:product_edit',['only'=>['edit','update']]);
+        $this->middleware('rule:product_delete',['only'=>['delete']]);
     }
+    */
 
     public function index()
     {
-        $admin = Admin::paginate(150);
-        if(!$admin)
+        $users = User::paginate(150);
+        if(!$users)
         {
             return $this->response('Not Found Data','success',204);
         }
-        return $this->response($admin,'success',200);
+        return $this->response($users,'success',200);
     }
+
+    public function create()
+    {
+        //
+    }
+
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),
             [
                 'name' => ['required','string'],
-                'email' => ['required','email','unique:admins,email'],
-                'password' => ['required'],
+                'email' => ['required','email','unique:users,email'],
+                'password' => ['required','min:8'],
                 'image' => ['required','image','max:2048'],
-                'rule_id' =>['required','not_in:0'],
             ]);
 
         if($validator->fails())
@@ -48,52 +55,51 @@ class AdminController extends Controller
             return $this->response($validator->errors(),'success',422);
         }
 
-        $image = $this->image('admins',$request->image);
+        $image = $this->image('users',$request->image);
 
-        $admin = Admin::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'image' => $image,
-            'rule_id' => $request->rule_id,
         ]);
-        return $this->response($admin,'success',201);
+        return $this->response($user,'success',201);
     }
+
 
     public function show($id)
     {
-        $admin = Admin::with('rule')->find($id);
-        if(!$admin)
+        $user = User::find($id);
+        if(!$user)
         {
             return $this->response('Not Found This Item','success',404);
         }
-        return $this->response($admin,'success',200);
+        return $this->response($user,'success',200);
     }
 
     public function edit($id)
     {
-        $admin = Admin::with('rule')->find($id);
-        if(!$admin)
+        $user = User::find($id);
+        if(!$user)
         {
             return $this->response('Not Found This Item','success',404);
         }
-        return $this->response($admin,'success',200);
+        return $this->response($user,'success',200);
     }
 
     public function update(Request $request, $id)
     {
-        $admin = Admin::find($id);
-        if(!$admin)
+        $user = User::find($id);
+        if(!$user)
         {
             return $this->response('Not Found This Item','success',404);
         }
         $validator = Validator::make($request->all(),
             [
                 'name' => ['required','string'],
-                'email' => ['required','email','unique:admins,email,'.\request()->route('admin')],
-                'password' => ['nullable'],
-                'image' => ['required','image','max:2048'],
-                'rule_id' =>['required','not_in:0'],
+                'email' => ['required','email','unique:users,email,'.\request()->route('user')],
+                'password' => ['sometimes','nullable','min:8'],
+                'image' => ['sometimes','nullable','image','max:2048'],
             ]);
 
         if($validator->fails())
@@ -103,8 +109,8 @@ class AdminController extends Controller
         $data = $request->all();
 
         if($request->hasFile('image')){
-            $this->delete_image('images/'.$admin->image);
-            $data['image'] = $this->image('admins',$request->file('image'));
+            $this->delete_image('images/'.$user->image);
+            $data['image'] = $this->image('users',$request->file('image'));
         }
 
         if($request->has('password'))
@@ -116,21 +122,21 @@ class AdminController extends Controller
             unset($data['password']);
         }
 
-        $admin->update($data);
-        return $this->response($admin,'success',201);
+        $user->update($data);
+        return $this->response($user,'success',201);
 
     }
+
 
     public function destroy($id)
     {
-        $admin = Admin::find($id);
-        if(!$admin)
+        $user = User::find($id);
+        if(!$user)
         {
             return $this->response('Not Found This Item','success',204);
         }
-        $this->delete_image('images/'.$admin->image);
-        $admin->delete();
+        $this->delete_image('images/'.$user->image);
+        $user->delete();
         return $this->response('Deleted Successfully','success',200);
     }
-
 }

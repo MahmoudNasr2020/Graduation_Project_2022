@@ -5,6 +5,7 @@ namespace App\Http\Traits;
 
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 trait ApiTrait
 {
@@ -30,7 +31,10 @@ trait ApiTrait
         $image = public_path().'/'.$path;
        if (File::exists($image))
        {
-           File::delete($image);
+           if(!Str::contains($image,'default.png'))
+           {
+               File::delete($image);
+           }
        }
 
     }

@@ -22,7 +22,7 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::paginate(50);
+        $products = Product::paginate(150);
         if(!$products)
         {
             return $this->response('Not Found Data','success',204);
