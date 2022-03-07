@@ -23,7 +23,7 @@ class CategoryController extends Controller
     /** @noinspection PhpUndefinedMethodInspection */
     public function index()
     {
-        $categories = Category::paginate(150);
+        $categories = Category::get();
         if(!$categories)
         {
             return $this->response('Not Found Data','success',204);

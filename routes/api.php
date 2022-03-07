@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Dashboard\Category\CategoryController;
 use App\Http\Controllers\Api\Dashboard\Company\CompanyController;
 use App\Http\Controllers\Api\Dashboard\Login\LoginController;
 use App\Http\Controllers\Api\Dashboard\Product\ProductController;
+use App\Http\Controllers\Api\FrontApp\Cart\CartController;
 use App\Http\Controllers\Api\Dashboard\Rule\RuleController;
 use App\Http\Controllers\Api\Dashboard\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,10 @@ Route::group(['prefix'=>'dashboard','as'=>'dashboard.'],function (){
         Route::resource('products', ProductController::class);
         ////////End Product//////////////
 
+
+        ////////Start Cart/////////////
+        Route::resource('carts', CartController::class);
+        ////////End Cart//////////////
 
         //////// Start Rule /////////////
         Route::get('rule/show/{id}', [RuleController::class,'show']);
